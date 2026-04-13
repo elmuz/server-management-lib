@@ -20,13 +20,14 @@ repos:
         types: [python]
         pass_filenames: false
 
-      # Run tests
+      # Run tests (90%+ coverage required)
       - id: pytest
         name: pytest
         entry: uv run pytest tests/ -v --tb=short
         language: system
         types: [python]
         pass_filenames: false
+        always_run: true
 
       # Markdown linting (style/formatting)
       - id: pymarkdown

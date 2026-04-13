@@ -16,6 +16,7 @@ dependencies = [
 dev = [
     # Testing
     "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
     # Linting
     "ruff>=0.9.0",
     # Type checking
@@ -38,6 +39,7 @@ python_functions = ["test_*"]
 markers = [
     "integration: marks integration tests that require real SSH connection",
 ]
+addopts = "--cov=src/server_management_lib --cov-report=term-missing --cov-fail-under=90"
 
 [tool.ruff]
 target-version = "py311"
@@ -67,3 +69,8 @@ python-version = "3.11"
 [tool.ty.rules]
 unresolved-attribute = "ignore"
 invalid-argument-type = "ignore"
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=7.1.0",
+]

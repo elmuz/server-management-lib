@@ -132,6 +132,8 @@ uv sync
 uv run pytest tests/ -v
 ```
 
+Tests **must** maintain 90%+ code coverage. The pre-commit hook will fail if coverage drops below 90%.
+
 ### Run linter
 
 ```bash
@@ -150,6 +152,12 @@ uv run ty check
 ```bash
 uv run pre-commit run --all-files
 ```
+
+**The pre-commit suite runs automatically before each commit and includes:**
+- Ruff linting and formatting
+- Type checking (ty)
+- **Tests with 100% coverage enforcement**
+- Markdown linting and link checking
 
 ### Check markdown links
 
@@ -180,7 +188,79 @@ uv run pymarkdown -c .pymarkdown fix
 - Long lines allowed in tests (`E501` ignored for `tests/**`)
 - Target Python version: 3.11
 
-## Security Model
+## Development Workflow
+
+### After Coding a Feature
+
+**Always run the full pre-commit suite before committing:**
+
+```bash
+uv run pre-commit run --all-files
+```
+
+This ensures:
+- ✅ All code passes linting and formatting checks
+- ✅ Type checking passes (no type errors)
+- ✅ **Tests pass with 90%+ coverage** (new code must be tested)
+- ✅ Markdown files are properly formatted
+- ✅ All links are valid
+
+### Before Committing
+
+**Verify that documentation reflects code changes:**
+
+1. **Check if docs need updating:**
+   - If code behavior changes → update relevant docs
+   - If available tools/methods change → update API docs
+   - If error messages change → update error message docs
+   - If configuration options change → update config docs
+
+2. **Update docs as part of the same commit:**
+   - Do NOT commit code and doc updates separately
+   - Code changes and their documentation should be atomic
+   - This prevents stale docs from accumulating
+
+3. **What to check:**
+   - `AGENTS.md` - module details, security model, validation layers
+   - `README.md` - public API, usage examples
+   - Docstrings - function signatures, parameters, return types
+   - Test descriptions - if test behavior changes
+
+**Example commit checklist:**
+```
+☐ Code passes all pre-commit hooks
+☐ Tests cover new code (90%+ coverage enforced)
+☐ Docstrings updated for changed functions
+☐ AGENTS.md updated if API/behavior changed
+☐ README.md updated if public interface changed
+```
+
+### Coverage Requirement
+
+**100% code coverage is the goal, but 90%+ is acceptable for edge cases.** The pre-commit hook enforces 100%, but in practice:
+
+**What must be covered (100%):**
+- All business logic
+- All validation paths
+- All error handling paths that can be reasonably triggered
+- All branches (if/else, try/except)
+
+**Acceptable to exclude (with pragma: no cover):**
+- Module-level initialization code that runs once on import
+- Extremely rare edge cases requiring complex async mocking
+- Integration-only code paths (marked with @pytest.mark.integration)
+
+**What this means in practice:**
+- Every function must have tests
+- Every branch (if/else) must be tested
+- Every error path must be tested when reasonably possible
+- Mock external dependencies (SSH, HTTP) properly
+- Use `# pragma: no cover` sparingly and only with justification
+
+**Less important:**
+- Markdown formatting / link checking scripts (utility, not core)
+- Configuration defaults structure (simple, unlikely to change)
+- Cosmetic changes to error messages
 
 **This is the most important part of the library.** Every change to security-related code must be treated with extreme caution.
 
