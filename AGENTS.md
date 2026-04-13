@@ -74,7 +74,11 @@ server-management-lib/
 │   ├── ssh_manager.py       # Async SSH connection manager
 │   └── http_clients.py      # InfluxDB & Prometheus HTTP clients
 ├── tests/
-│   └── test_library.py      # Unit tests (mocked SSH/HTTP)
+│   ├── conftest.py          # Shared pytest fixtures
+│   ├── test_config.py       # Configuration loading tests
+│   ├── test_security.py     # Security validation tests
+│   ├── test_ssh_manager.py  # SSH manager tests (mocked)
+│   └── test_http_clients.py # HTTP client tests (mocked)
 ├── scripts/
 │   └── check_md_links.py    # Markdown link checker utility
 ├── pyproject.toml           # Project configuration
@@ -173,8 +177,9 @@ uv run pymarkdown -c .pymarkdown fix
 
 ## Testing Conventions
 
-- Tests live in `tests/test_library.py`
-- Test classes are organized by component (e.g., `TestConfiguration`, `TestDeviceNameValidation`, `TestCommandSafety`)
+- Tests are organized by module: one test file per source module
+- `conftest.py` provides shared fixtures (configs, security validator)
+- Test classes are organized by component (e.g., `TestDeviceNameValidation`, `TestCommandSafety`)
 - SSH and HTTP operations are **mocked** - no real network connections in unit tests
 - Async tests use `asyncio.run()` to execute coroutines
 - Integration tests are marked with `@pytest.mark.integration` (for real SSH connections)
