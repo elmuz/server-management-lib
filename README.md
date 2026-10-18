@@ -1,3 +1,15 @@
+> **This repository is archived and no longer maintained.**
+>
+> `server-management-lib` now lives in the [`elmuz/server-mcp`](https://github.com/elmuz/server-mcp)
+> monorepo together with `remote-server-mcp` and `disk-health-mcp`. That repository is the single
+> source of truth for code, releases, issues and pull requests; the full history of this
+> repository was imported into it.
+>
+> New location:
+> [packages/server-management-lib](https://github.com/elmuz/server-mcp/tree/main/packages/server-management-lib).
+>
+> This repository is read-only. Please use the monorepo instead.
+
 # Server Management Library
 
 Shared components for server management MCPs.
